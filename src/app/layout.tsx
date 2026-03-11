@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "FixMyBuild AI",
@@ -15,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <header className="header">
-          <a href="/" className="logo">FixMyBuild AI</a>
+          <Link  href="/" className="logo">FixMyBuild AI</Link >
         </header>
         <main className="main">{children}</main>
       </body>
