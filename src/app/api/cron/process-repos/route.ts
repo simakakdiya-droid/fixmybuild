@@ -3,6 +3,7 @@ import { getFailedRuns, getRunLogs, createPullRequest } from "@/lib/github";
 import { analyzeLogs } from "@/lib/groq";
 import { supabase } from "@/lib/supabase";
 import { pipelineFailureToRow } from "@/lib/pipeline-db";
+import type { PipelineFailure } from "@/types/pipeline";
 
 const CONFIDENCE_THRESHOLD = 70;
 
@@ -43,7 +44,7 @@ export async function GET(request: Request) {
           // store minimal failure
         }
 
-        const failure = {
+        const failure: Partial<PipelineFailure> = {
           id,
           pipelineName: run.workflowName,
           status: "failure",
@@ -62,7 +63,7 @@ export async function GET(request: Request) {
           repoOwner: owner,
           repoName: repo,
           runId: run.runId,
-          createdPullRequest: null as unknown,
+          createdPullRequest: null,
         };
 
         const row = pipelineFailureToRow(failure) as Record<string, unknown>;
@@ -93,7 +94,7 @@ export async function GET(request: Request) {
               `AI-suggested fix for pipeline failure (confidence: ${analysis.confidence}%).\n\n${analysis.error_summary}`
             );
             if (pr) {
-              failure.createdPullRequest = pr as never;
+              failure.createdPullRequest = pr;
               const updatedRow = pipelineFailureToRow(failure) as Record<string, unknown>;
               await supabase.from("pipeline_failures").upsert(updatedRow, { onConflict: "id" });
             }
