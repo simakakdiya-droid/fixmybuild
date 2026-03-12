@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FixMyBuild AI — Presentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #818cf8;
+    --purple: #a855f7;
+    --danger: #dc2626;
+    --success: #059669;
+    --warning: #d97706;
+    --dark: #0f172a;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f8fafc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: white;
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── SLIDE BASE ── */
+  .slide {
+    width: 100%;
+    min-height: 100vh;
+    padding: 56px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── SLIDE 1 — COVER ── */
+  .slide-cover {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #312e81 100%);
+    color: white;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 80px 80px;
+  }
+
+  .slide-cover .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .logo-box {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+  }
+
+  .slide-cover .product-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.02em;
+  }
+
+  .slide-cover h1 {
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    color: white;
+    margin-bottom: 12px;
+  }
+
+  .slide-cover h1 span {
+    background: linear-gradient(90deg, #818cf8, #c4b5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .slide-cover .tagline {
+    font-size: 22px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 400;
+    margin-bottom: 56px;
+    max-width: 600px;
+  }
+
+  .cover-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 60px;
+  }
+
+  .pill {
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.08);
+    letter-spacing: 0.02em;
+  }
+
+  .cover-meta {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .cover-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .cover-meta-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+  }
+
+  .cover-meta-item .value {
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* ── SLIDE HEADER ── */
+  .slide-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+
+  .slide-title {
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .slide-subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+
+  /* ── SLIDE DECORATIONS ── */
+  .slide-number {
+    position: absolute;
+    bottom: 32px;
+    right: 56px;
+    font-size: 12px;
+    color: #cbd5e1;
+    font-weight: 500;
+  }
+
+  .slide-brand {
+    position: absolute;
+    bottom: 32px;
+    left: 56px;
+    font-size: 12px;
+    color: #cbd5e1;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .brand-dot {
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4f46e5, #a855f7);
+  }
+
+  /* ── TWO-COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .card-accent {
+    border-left: 4px solid var(--primary);
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .icon-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+
+  /* ── PROBLEM STATS ── */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .stat-box {
+    text-align: center;
+    padding: 28px 20px;
+    background: linear-gradient(135deg, #f0f4ff, #faf5ff);
+    border-radius: 16px;
+    border: 1.5px solid #e0e7ff;
+  }
+
+  .stat-box .num {
+    font-size: 44px;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-box .desc {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* ── FLOW ── */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 8px 0;
+  }
+
+  .flow-step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .flow-box {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    padding: 14px 12px;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-height: 80px;
+    justify-content: center;
+  }
+
+  .flow-box .step-num {
+    width: 22px;
+    height: 22px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .flow-box .step-icon { font-size: 20px; }
+  .flow-box .step-label { font-size: 11px; line-height: 1.3; }
+
+  .flow-arrow {
+    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 18px;
+    flex-shrink: 0;
+    padding-bottom: 0;
+    margin-top: 26px;
+  }
+
+  /* ── COMPETITOR TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+  }
+
+  thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  thead th:first-child { border-radius: 10px 0 0 0; }
+  thead th:last-child  { border-radius: 0 10px 0 0; }
+
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody tr:nth-child(odd)  { background: white; }
+
+  tbody tr.highlight-row { background: #eef2ff !important; }
+
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  td:first-child { font-weight: 600; }
+
+  .check { color: var(--success); font-size: 16px; }
+  .cross { color: #cbd5e1; font-size: 16px; }
+  .partial { color: var(--warning); font-size: 13px; font-weight: 600; }
+
+  .product-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(90deg, #4f46e5, #7c3aed);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* ── DIFF CARDS ── */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .diff-card {
+    padding: 22px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    background: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .diff-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4f46e5, #a855f7);
+  }
+
+  .diff-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .diff-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .diff-num {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    font-size: 36px;
+    font-weight: 900;
+    color: #e0e7ff;
+    line-height: 1;
+  }
+
+  /* ── USE CASES ── */
+  .usecase-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .usecase-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 18px 20px;
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+  }
+
+  .usecase-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .usecase-body h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .usecase-body p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── TECH STACK ── */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .stack-card {
+    padding: 20px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: white;
+    text-align: center;
+  }
+
+  .stack-card .stack-icon { font-size: 28px; margin-bottom: 8px; }
+  .stack-card .stack-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .stack-card .stack-role { font-size: 12px; color: var(--muted); }
+
+  /* ── FUTURE SCOPE ── */
+  .scope-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .scope-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 18px;
+    background: var(--bg);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .scope-badge {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .scope-text h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .scope-text p  { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+  /* ── CLOSING SLIDE ── */
+  .slide-closing {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #312e81 100%);
+    color: white;
+    text-align: center;
+    align-items: center;
+  }
+
+  .slide-closing h2 {
+    font-size: 48px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: -0.04em;
+    margin-bottom: 16px;
+  }
+
+  .slide-closing h2 span {
+    background: linear-gradient(90deg, #818cf8, #c4b5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .slide-closing p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    max-width: 520px;
+    margin: 0 auto 40px;
+  }
+
+  .cta-box {
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 16px;
+    padding: 24px 40px;
+    max-width: 600px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    font-style: italic;
+    line-height: 1.7;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    .slide { page-break-after: always; min-height: 100vh; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @page { size: A4 landscape; margin: 0; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+  .badge-green  { background: #dcfce7; color: #16a34a; }
+  .badge-red    { background: #fee2e2; color: #dc2626; }
+  .badge-purple { background: #f3e8ff; color: #7e22ce; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 1 — COVER
+══════════════════════════════════════════════ -->
+<div class="slide slide-cover">
+  <div class="logo-row">
+    <div class="logo-box">⚡</div>
+    <span class="product-name">FixMyBuild AI</span>
+  </div>
+
+  <h1>Fix CI/CD Failures<br /><span>Automatically.</span></h1>
+  <p class="tagline">AI-powered root cause analysis & auto-PR generation for failed GitHub Actions pipelines — zero manual debugging required.</p>
+
+  <div class="cover-pills">
+    <span class="pill">Next.js 16 + App Router</span>
+    <span class="pill">Supabase</span>
+    <span class="pill">Groq AI · llama-3.3-70b</span>
+    <span class="pill">GitHub API</span>
+    <span class="pill">Vercel</span>
+  </div>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="label">Category</span>
+      <span class="value">DevOps / Developer Tools</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="label">Target Users</span>
+      <span class="value">Developers & Engineering Teams</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="label">Built With</span>
+      <span class="value">Claude CLI (AI-Assisted)</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="label">Deployment</span>
+      <span class="value">Vercel + Supabase Cloud</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 2 — THE PROBLEM
+══════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="top-bar"></div>
+
+  <p class="slide-label">The Problem</p>
+  <h2 class="slide-title">CI/CD failures are a silent productivity killer</h2>
+  <p class="slide-subtitle">Every team using GitHub Actions faces the same painful loop — daily.</p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="num">~45</div>
+      <div class="desc">minutes wasted per developer per week debugging failed pipelines</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">60%</div>
+      <div class="desc">of CI failures are caused by the same recurring categories of errors</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">3×</div>
+      <div class="desc">slower release cycles for teams without automated failure triage</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="card card-accent" style="margin-bottom:16px">
+        <div class="icon-title">
+          <div class="icon-box" style="background:#fee2e2">😤</div>
+          <h3>The manual debugging loop</h3>
+        </div>
+        <p>Developer sees red ❌ → opens Actions tab → scrolls through hundreds of log lines → searches Stack Overflow → tries a fix → waits for pipeline to re-run → repeat. This can take 30–90 minutes for a single failure.</p>
+      </div>
+      <div class="card card-accent">
+        <div class="icon-title">
+          <div class="icon-box" style="background:#fef3c7">🔔</div>
+          <h3>No intelligent alerting</h3>
+        </div>
+        <p>GitHub sends a generic "your pipeline failed" email with a link to raw logs. It provides zero diagnosis, zero context, and zero guidance on how to fix the problem.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card card-accent" style="margin-bottom:16px">
+        <div class="icon-title">
+          <div class="icon-box" style="background:#f3e8ff">📊</div>
+          <h3>No pattern recognition</h3>
+        </div>
+        <p>Teams repeatedly fix the same types of errors — missing packages, config drift, breaking API changes — without any system tracking or preventing recurrence.</p>
+      </div>
+      <div class="card card-accent">
+        <div class="icon-title">
+          <div class="icon-box" style="background:#dcfce7">⏱️</div>
+          <h3>Context-switching cost</h3>
+        </div>
+        <p>Leaving a feature mid-flow to debug a pipeline failure breaks developer flow state. Research shows this costs 23 minutes of lost productivity per interruption on average.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-brand"><span class="brand-dot"></span>FixMyBuild AI</div>
+  <div class="slide-number">02</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 3 — THE SOLUTION
+══════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="top-bar"></div>
+
+  <p class="slide-label">The Solution</p>
+  <h2 class="slide-title">AI that reads your logs, finds the root cause, and opens the fix PR</h2>
+  <p class="slide-subtitle">FixMyBuild AI is a self-healing CI/CD companion — from failure to pull request, fully automated.</p>
+
+  <div class="flow" style="margin-bottom:36px">
+    <div class="flow-step">
+      <div class="flow-box">
+        <span class="step-icon">💥</span>
+        <span class="step-label">Pipeline Fails on GitHub</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-box">
+        <span class="step-icon">📥</span>
+        <span class="step-label">Fetch Logs via GitHub API</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-box">
+        <span class="step-icon">🔍</span>
+        <span class="step-label">Extract Key Error Lines</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-box">
+        <span class="step-icon">🤖</span>
+        <span class="step-label">Groq AI Root Cause Analysis</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-box">
+        <span class="step-icon">💾</span>
+        <span class="step-label">Store in Supabase</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-box">
+        <span class="step-icon">🔀</span>
+        <span class="step-label">Auto-Create Fix PR on GitHub</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="icon-title">
+        <div class="icon-box" style="background:#eef2ff; font-size:20px">🧠</div>
+        <h3>Intelligent Analysis</h3>
+      </div>
+      <p>Groq's llama-3.3-70b model acts as a senior DevOps engineer, categorising failures into: <strong>code, dependency, configuration, infrastructure, or test</strong> errors — with severity and confidence score.</p>
+    </div>
+    <div class="card">
+      <div class="icon-title">
+        <div class="icon-box" style="background:#ecfdf5; font-size:20px">🔀</div>
+        <h3>Auto Fix PRs</h3>
+      </div>
+      <p>When confidence ≥ 70%, FixMyBuild automatically creates a GitHub branch, commits a <code>FIX_SUGGESTION.md</code>, and opens a Pull Request — all without any human intervention.</p>
+    </div>
+    <div class="card">
+      <div class="icon-title">
+        <div class="icon-box" style="background:#fffbeb; font-size:20px">📊</div>
+        <h3>Failure Dashboard</h3>
+      </div>
+      <p>A real-time dashboard shows all pipeline failures with severity badges, confidence scores, root cause summaries, and direct links to auto-created PRs — all in one place.</p>
+    </div>
+  </div>
+
+  <div class="slide-brand"><span class="brand-dot"></span>FixMyBuild AI</div>
+  <div class="slide-number">03</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 4 — USE CASES
+══════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="top-bar"></div>
+
+  <p class="slide-label">Use Cases</p>
+  <h2 class="slide-title">Who benefits from FixMyBuild AI?</h2>
+  <p class="slide-subtitle">Any team shipping code through GitHub Actions — from a solo developer to a 500-person engineering org.</p>
+
+  <div class="two-col">
+    <div class="usecase-list">
+      <div class="usecase-item">
+        <div class="usecase-icon" style="background:#eef2ff">👨‍💻</div>
+        <div class="usecase-body">
+          <h4>Solo Developer / Freelancer</h4>
+          <p>Working alone with no DevOps support. FixMyBuild acts as an AI DevOps engineer — diagnosing and fixing pipeline issues so the developer can stay in flow.</p>
+        </div>
+      </div>
+      <div class="usecase-item">
+        <div class="usecase-icon" style="background:#ecfdf5">🚀</div>
+        <div class="usecase-body">
+          <h4>Startup Engineering Team</h4>
+          <p>Small teams moving fast with no time to babysit CI. FixMyBuild auto-triages failures overnight via cron, so the team wakes up to analysis — not raw logs.</p>
+        </div>
+      </div>
+      <div class="usecase-item">
+        <div class="usecase-icon" style="background:#fffbeb">🏢</div>
+        <div class="usecase-body">
+          <h4>Enterprise DevOps Team</h4>
+          <p>Managing dozens of repos and pipelines. FixMyBuild provides a centralised failure dashboard with pattern tracking, reducing MTTR (mean time to resolution).</p>
+        </div>
+      </div>
+    </div>
+    <div class="usecase-list">
+      <div class="usecase-item">
+        <div class="usecase-icon" style="background:#fdf2f8">📦</div>
+        <div class="usecase-body">
+          <h4>Open Source Maintainer</h4>
+          <p>Juggling many contributors and frequent PRs. FixMyBuild automatically diagnoses CI failures on contributor PRs, adding AI-generated fix suggestions as comments.</p>
+        </div>
+      </div>
+      <div class="usecase-item">
+        <div class="usecase-icon" style="background:#f0fdf4">🔄</div>
+        <div class="usecase-body">
+          <h4>Release Engineer</h4>
+          <p>Responsible for release stability. FixMyBuild provides pre-release failure summaries — categorised by type — so release engineers know exactly what broke before deploying.</p>
+        </div>
+      </div>
+      <div class="usecase-item">
+        <div class="usecase-icon" style="background:#eff6ff">📐</div>
+        <div class="usecase-body">
+          <h4>Platform / SRE Team</h4>
+          <p>Monitoring pipeline health across the organisation. FixMyBuild aggregates failure data into Supabase, enabling trend analysis and proactive infrastructure fixes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-brand"><span class="brand-dot"></span>FixMyBuild AI</div>
+  <div class="slide-number">04</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 5 — COMPETITOR ANALYSIS
+══════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="top-bar"></div>
+
+  <p class="slide-label">Competitor Analysis</p>
+  <h2 class="slide-title">How FixMyBuild AI stacks up</h2>
+  <p class="slide-subtitle">Existing tools alert you to failures. FixMyBuild <strong>fixes</strong> them.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>CI Log Analysis</th>
+        <th>AI Root Cause</th>
+        <th>Auto Fix PR</th>
+        <th>GitHub Native</th>
+        <th>Zero Config</th>
+        <th>Real-time Dashboard</th>
+        <th>Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="highlight-row">
+        <td><span class="product-badge">⚡ FixMyBuild AI</span></td>
+        <td><span class="check">✅</span></td>
+        <td><span class="check">✅</span></td>
+        <td><span class="check">✅</span></td>
+        <td><span class="check">✅</span></td>
+        <td><span class="check">✅</span></td>
+        <td><span class="check">✅</span></td>
+        <td>Open Source / SaaS</td>
+      </tr>
+      <tr>
+        <td>GitHub Copilot</td>
+        <td><span class="cross">–</span></td>
+        <td><span class="partial">Partial</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="check">✅</span></td>
+        <td><span class="check">✅</span></td>
+        <td><span class="cross">–</span></td>
+        <td>$10–19/mo</td>
+      </tr>
+      <tr>
+        <td>Sentry</td>
+        <td><span class="cross">–</span></td>
+        <td><span class="partial">Runtime only</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="partial">Plugin</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="check">✅</span></td>
+        <td>$26/mo+</td>
+      </tr>
+      <tr>
+        <td>BuildPulse</td>
+        <td><span class="partial">Flaky tests only</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="check">✅</span></td>
+        <td><span class="partial">Partial</span></td>
+        <td><span class="check">✅</span></td>
+        <td>$49/mo+</td>
+      </tr>
+      <tr>
+        <td>Trunk.io</td>
+        <td><span class="check">✅</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="check">✅</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="check">✅</span></td>
+        <td>$20/seat/mo</td>
+      </tr>
+      <tr>
+        <td>LinearB</td>
+        <td><span class="cross">–</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="partial">Plugin</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="check">✅</span></td>
+        <td>Custom pricing</td>
+      </tr>
+      <tr>
+        <td>Raygun</td>
+        <td><span class="cross">–</span></td>
+        <td><span class="partial">Runtime errors</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="cross">–</span></td>
+        <td><span class="check">✅</span></td>
+        <td>$49/mo+</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:13px; color:var(--muted); margin-top:16px; font-style:italic">
+    ✅ Fully supported &nbsp;|&nbsp; Partial = limited or requires plugin &nbsp;|&nbsp; – = not supported
+  </p>
+
+  <div class="slide-brand"><span class="brand-dot"></span>FixMyBuild AI</div>
+  <div class="slide-number">05</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 6 — KEY DIFFERENTIATORS
+══════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="top-bar"></div>
+
+  <p class="slide-label">Why FixMyBuild AI</p>
+  <h2 class="slide-title">6 things no other tool does together</h2>
+  <p class="slide-subtitle">Our unique combination of capabilities creates a defensible position in the market.</p>
+
+  <div class="diff-grid">
+    <div class="diff-card">
+      <span class="diff-num">01</span>
+      <h4>🔀 Closes the loop with auto-PRs</h4>
+      <p>No other CI failure tool goes from "detected" to "pull request opened" automatically. FixMyBuild doesn't just alert — it acts. Fix PRs are created on GitHub with a branch, a commit, and a full explanation.</p>
+    </div>
+    <div class="diff-card">
+      <span class="diff-num">02</span>
+      <h4>🧠 Structured AI analysis, not summaries</h4>
+      <p>Groq LLM returns a structured JSON payload: root cause, failed stage, category, severity (low/medium/high), confidence score (0–100), and key error lines — not just a paragraph of text.</p>
+    </div>
+    <div class="diff-card">
+      <span class="diff-num">03</span>
+      <h4>✅ Zero configuration for the developer</h4>
+      <p>Add your GitHub token and repo name to env vars — that's it. No agents to install, no YAML to write, no GitHub App to approve. FixMyBuild works with your existing GitHub Actions setup immediately.</p>
+    </div>
+    <div class="diff-card">
+      <span class="diff-num">04</span>
+      <h4>📊 Confidence-gated automation</h4>
+      <p>PRs are only auto-created when AI confidence ≥ 70%. Below that threshold, the analysis is surfaced to the developer for review. This prevents noise and maintains trust in the automation.</p>
+    </div>
+    <div class="diff-card">
+      <span class="diff-num">05</span>
+      <h4>🗂️ Failure categorisation system</h4>
+      <p>Every failure is tagged as: <strong>code</strong>, <strong>dependency</strong>, <strong>configuration</strong>, <strong>infrastructure</strong>, or <strong>test</strong>. This enables pattern analysis — e.g. "80% of failures last month were dependency issues".</p>
+    </div>
+    <div class="diff-card">
+      <span class="diff-num">06</span>
+      <h4>⚡ Powered by the fastest LLM available</h4>
+      <p>Groq's inference API runs llama-3.3-70b at 500+ tokens/second — typical analysis completes in under 3 seconds. No waiting. Failures are analysed and PRs are opened before most developers notice the red ❌.</p>
+    </div>
+  </div>
+
+  <div class="slide-brand"><span class="brand-dot"></span>FixMyBuild AI</div>
+  <div class="slide-number">06</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 7 — TECH STACK & ARCHITECTURE
+══════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="top-bar"></div>
+
+  <p class="slide-label">Technical Architecture</p>
+  <h2 class="slide-title">Modern, serverless, and production-ready</h2>
+  <p class="slide-subtitle">Built on the mandatory hackathon stack — Next.js + Supabase + Vercel — with AI at the core.</p>
+
+  <div class="stack-grid" style="margin-bottom:28px">
+    <div class="stack-card">
+      <div class="stack-icon">▲</div>
+      <div class="stack-name">Next.js 16</div>
+      <div class="stack-role">App Router, SSR, API Routes</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-icon">🐘</div>
+      <div class="stack-name">Supabase</div>
+      <div class="stack-role">PostgreSQL · Failure storage</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-icon">⚡</div>
+      <div class="stack-name">Groq API</div>
+      <div class="stack-role">llama-3.3-70b · AI analysis</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-icon">🐙</div>
+      <div class="stack-name">GitHub API</div>
+      <div class="stack-role">Fetch logs · Create PRs</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-icon">△</div>
+      <div class="stack-name">Vercel</div>
+      <div class="stack-role">Edge deploy · Daily cron</div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-icon">🔷</div>
+      <div class="stack-name">TypeScript</div>
+      <div class="stack-role">End-to-end type safety</div>
+    </div>
+  </div>
+
+  <div class="card" style="background: #0f172a; border-color: #1e293b;">
+    <p style="font-family: ui-monospace, monospace; font-size: 12px; color: #94a3b8; line-height: 1.8;">
+      <span style="color:#818cf8">GitHub Actions Failure</span>
+      <span style="color:#475569"> → </span>
+      <span style="color:#34d399">GET /api/cron/process-repos</span>
+      <span style="color:#475569"> → </span>
+      <span style="color:#f59e0b">github.getRunLogs()</span>
+      <span style="color:#475569"> → </span>
+      <span style="color:#f59e0b">zip.extractErrorLines()</span>
+      <span style="color:#475569"> → </span>
+      <span style="color:#c084fc">groq.analyzeLogs()</span>
+      <span style="color:#475569"> → </span>
+      <span style="color:#34d399">supabase.upsert()</span>
+      <span style="color:#475569"> → </span>
+      <span style="color:#818cf8">[ confidence ≥ 70% ]</span>
+      <span style="color:#475569"> → </span>
+      <span style="color:#f59e0b">github.createPullRequest()</span>
+    </p>
+  </div>
+
+  <div class="slide-brand"><span class="brand-dot"></span>FixMyBuild AI</div>
+  <div class="slide-number">07</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 8 — CORE FEATURES (MVP)
+══════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="top-bar"></div>
+
+  <p class="slide-label">MVP Feature Set</p>
+  <h2 class="slide-title">What's live today</h2>
+  <p class="slide-subtitle">Built and shipped in under 10 hours using Claude CLI. Every feature is functional and deployed.</p>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="icon-title">
+        <div class="icon-box" style="background:#eef2ff">📋</div>
+        <h3>Failure Dashboard</h3>
+      </div>
+      <p>Real-time table of all pipeline failures with severity badges, confidence scores, failed stage, root cause summary, and links to auto-created PRs.</p>
+      <p style="margin-top:10px"><span class="badge badge-blue">Stats cards</span> <span class="badge badge-blue">Live search</span></p>
+    </div>
+    <div class="card">
+      <div class="icon-title">
+        <div class="icon-box" style="background:#f3e8ff">🤖</div>
+        <h3>AI Analysis Engine</h3>
+      </div>
+      <p>Groq llama-3.3-70b analyses extracted log errors and returns structured JSON: root cause, category, severity, confidence, fix suggestion, and key error lines.</p>
+      <p style="margin-top:10px"><span class="badge badge-purple">< 3 sec</span> <span class="badge badge-purple">Structured output</span></p>
+    </div>
+    <div class="card">
+      <div class="icon-title">
+        <div class="icon-box" style="background:#ecfdf5">🔀</div>
+        <h3>Auto Fix PR Creator</h3>
+      </div>
+      <p>When confidence ≥ 70%, automatically creates a GitHub branch, commits a fix suggestion file, and opens a PR with AI-written title and description.</p>
+      <p style="margin-top:10px"><span class="badge badge-green">Confidence gate</span> <span class="badge badge-green">GitHub native</span></p>
+    </div>
+    <div class="card">
+      <div class="icon-title">
+        <div class="icon-box" style="background:#fff7ed">📈</div>
+        <h3>Pipeline Stage Visualizer</h3>
+      </div>
+      <p>Visual pipeline diagram showing each stage (Checkout → Install → Build → Test → Deploy) with pass/fail/pending states and root cause tooltip on the failed stage.</p>
+    </div>
+    <div class="card">
+      <div class="icon-title">
+        <div class="icon-box" style="background:#eff6ff">⏰</div>
+        <h3>Automated Cron Analysis</h3>
+      </div>
+      <p>Vercel cron job runs daily at midnight UTC, automatically fetching and analysing all new failures across configured repos — fully hands-free operation.</p>
+    </div>
+    <div class="card">
+      <div class="icon-title">
+        <div class="icon-box" style="background:#fdf2f8">🗄️</div>
+        <h3>Supabase Data Layer</h3>
+      </div>
+      <p>All failure analysis stored in Supabase PostgreSQL. Enables historical tracking, pattern analysis, and future multi-user/team features with minimal backend code.</p>
+    </div>
+  </div>
+
+  <div class="slide-brand"><span class="brand-dot"></span>FixMyBuild AI</div>
+  <div class="slide-number">08</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 9 — FUTURE SCOPE
+══════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="top-bar"></div>
+
+  <p class="slide-label">Future Roadmap</p>
+  <h2 class="slide-title">What comes after the hackathon</h2>
+  <p class="slide-subtitle">The MVP proves the core concept. These are the next high-impact features on the roadmap.</p>
+
+  <div class="scope-grid">
+    <div class="scope-item">
+      <span class="scope-badge">v1.1</span>
+      <div class="scope-text">
+        <h4>Admin Configuration Portal</h4>
+        <p>Web UI for admins to connect multiple pipeline sources: GitHub Actions, Azure DevOps, GitLab CI — with credential management and per-repo configuration.</p>
+      </div>
+    </div>
+    <div class="scope-item">
+      <span class="scope-badge">v1.1</span>
+      <div class="scope-text">
+        <h4>Supabase Auth + Multi-tenancy</h4>
+        <p>Team accounts, role-based access (admin / developer / viewer), and per-team repo scoping so multiple engineering teams can use one FixMyBuild instance.</p>
+      </div>
+    </div>
+    <div class="scope-item">
+      <span class="scope-badge">v1.2</span>
+      <div class="scope-text">
+        <h4>Slack & Email Notifications</h4>
+        <p>Instant Slack messages and email alerts when a high-severity failure is detected, with AI summary and a direct link to the analysis and auto-created PR.</p>
+      </div>
+    </div>
+    <div class="scope-item">
+      <span class="scope-badge">v1.2</span>
+      <div class="scope-text">
+        <h4>Trend Analytics Dashboard</h4>
+        <p>Charts showing failure trends over time, most common failure categories, repos with highest failure rates, and MTTR (mean time to resolution) tracking.</p>
+      </div>
+    </div>
+    <div class="scope-item">
+      <span class="scope-badge">v1.3</span>
+      <div class="scope-text">
+        <h4>Azure DevOps + GitLab CI Support</h4>
+        <p>Extend beyond GitHub Actions to support Azure DevOps pipelines and GitLab CI/CD — targeting enterprise customers who use mixed VCS environments.</p>
+      </div>
+    </div>
+    <div class="scope-item">
+      <span class="scope-badge">v1.3</span>
+      <div class="scope-text">
+        <h4>GitHub App / Marketplace listing</h4>
+        <p>Publish as a GitHub App so any user can install FixMyBuild on any repository in one click — no environment variables, no manual setup required.</p>
+      </div>
+    </div>
+    <div class="scope-item">
+      <span class="scope-badge">v2.0</span>
+      <div class="scope-text">
+        <h4>Self-Learning Failure Patterns</h4>
+        <p>Track which AI suggestions were accepted, rejected, or modified. Use this feedback to improve analysis quality and build a proprietary dataset of CI/CD fixes.</p>
+      </div>
+    </div>
+    <div class="scope-item">
+      <span class="scope-badge">v2.0</span>
+      <div class="scope-text">
+        <h4>PR Comment Integration</h4>
+        <p>Automatically post an AI analysis comment directly on PRs that trigger a failing pipeline — giving contributors immediate feedback without leaving GitHub.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-brand"><span class="brand-dot"></span>FixMyBuild AI</div>
+  <div class="slide-number">09</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 10 — CLOSING / CTA
+══════════════════════════════════════════════ -->
+<div class="slide slide-closing">
+  <div class="logo-box" style="width:56px;height:56px;margin:0 auto 24px;font-size:26px">⚡</div>
+  <h2>Stop debugging.<br /><span>Start shipping.</span></h2>
+  <p>FixMyBuild AI turns every failed pipeline into a pull request — automatically. Built for developers who value their time.</p>
+
+  <div class="cta-box">
+    "Build fast. Scale smart. Stay secure. Connect with Bacancy and launch your application the right way."
+  </div>
+
+  <div style="margin-top:40px; display:flex; gap:40px; justify-content:center; flex-wrap:wrap;">
+    <div style="text-align:center">
+      <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.35); margin-bottom:6px; font-weight:600">Live Demo</div>
+      <div style="font-size:14px; font-weight:700; color:rgba(255,255,255,0.85)">fixmybuild.vercel.app</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.35); margin-bottom:6px; font-weight:600">GitHub</div>
+      <div style="font-size:14px; font-weight:700; color:rgba(255,255,255,0.85)">github.com/simakakdiya-droid/fixmybuild</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.35); margin-bottom:6px; font-weight:600">Stack</div>
+      <div style="font-size:14px; font-weight:700; color:rgba(255,255,255,0.85)">Next.js · Supabase · Groq · Vercel</div>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:32px;left:0;right:0;text-align:center;font-size:12px;color:rgba(255,255,255,0.2)">
+    Built with Claude CLI · Bacancy Hackathon 2026
+  </div>
+</div>
+
+</body>
+</html>
