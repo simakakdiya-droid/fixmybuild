@@ -98,19 +98,19 @@ export function PipelineDetailsClient({
       {/* ── Main failure card ── */}
       <div className="card">
         {/* Header row */}
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", marginBottom: "1.25rem", flexWrap: "wrap" }}>
-          <div>
+        <div className="detail-header">
+          <div className="detail-header-left">
             <p className="section-label">Pipeline failure detected</p>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--text)", letterSpacing: "-0.02em", marginBottom: "0.25rem" }}>
+            <h2 className="detail-header-title">
               {failure.pipelineName}
             </h2>
             {failure.repoOwner && failure.repoName && (
-              <p style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>
+              <p className="detail-header-meta">
                 {failure.repoOwner}/{failure.repoName}
               </p>
             )}
           </div>
-          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          <div className="detail-header-badges">
             <span className={`badge severity-${severityLevel}`}>
               {severityLevel === "high" ? "🔴" : severityLevel === "low" ? "🟢" : "🟡"}{" "}
               Severity: {(failure.severity ?? "MEDIUM").toUpperCase()}
@@ -265,7 +265,7 @@ export function PipelineDetailsClient({
 
       {/* ── Generate PR button ── */}
       {!failure.createdPullRequest && failure.repoOwner && failure.repoName && (
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "0.5rem" }}>
+        <div className="pr-button-group">
           <button
             type="button"
             className="btn btn-primary"
@@ -282,7 +282,7 @@ export function PipelineDetailsClient({
             )}
           </button>
           {failure.confidence < 70 && (
-            <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
+            <span className="pr-button-warning">
               Low confidence ({failure.confidence}%) — review fix before merging
             </span>
           )}
