@@ -78,7 +78,7 @@ export default function RootLayout({
             </div>
 
             <nav className="footer-links" aria-label="Footer navigation">
-              <a href="/PRESENTATION.html" target="_blank" rel="noopener noreferrer" className="footer-link">Documentation</a>
+              <a href="/PRESENTATION.html?v=20260312-llm" target="_blank" rel="noopener noreferrer" className="footer-link">Documentation</a>
               <a href="https://www.linkedin.com/in/seema-kakadiya-23757b170" target="_blank" rel="noopener noreferrer" className="footer-link">Support</a>
               <a
                 href="https://github.com/simakakdiya-droid/fixmybuild"
