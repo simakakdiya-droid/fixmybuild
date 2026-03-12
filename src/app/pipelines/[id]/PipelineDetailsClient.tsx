@@ -146,7 +146,7 @@ export function PipelineDetailsClient({
           </div>
         </section>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", flexWrap: "wrap" }}>
+        <div className="detail-grid">
           {/* Left column */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             {failure.errorSummary && (

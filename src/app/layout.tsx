@@ -79,7 +79,7 @@ export default function RootLayout({
 
             <nav className="footer-links" aria-label="Footer navigation">
               <a href="/PRESENTATION.html" target="_blank" rel="noopener noreferrer" className="footer-link">Documentation</a>
-              <a href="/PRESENTATION.html" target="_blank" rel="noopener noreferrer" className="footer-link">Support</a>
+              <a href="https://www.linkedin.com/in/seema-kakadiya-23757b170" target="_blank" rel="noopener noreferrer" className="footer-link">Support</a>
               <a
                 href="https://github.com/simakakdiya-droid/fixmybuild"
                 target="_blank"
@@ -88,7 +88,7 @@ export default function RootLayout({
               >
                 GitHub
               </a>
-              <a href="#" className="footer-link">Contact</a>
+              <a href="https://www.linkedin.com/in/seema-kakadiya-23757b170" target="_blank" rel="noopener noreferrer" className="footer-link">Contact</a>
             </nav>
 
             <div className="footer-meta">
