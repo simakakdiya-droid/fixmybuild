@@ -1,0 +1,178 @@
+================================================================================
+FIXMYBUILD AI — PROJECT CONTEXT SUMMARY
+================================================================================
+
+WHAT IT DOES
+------------
+A SaaS app that analyzes failed GitHub Actions pipeline runs using AI (Groq LLM)
+and automatically creates pull requests with fix suggestions.
+
+Repo: https://github.com/simakakdiya-droid/fixmybuild
+Deploy: Vercel
+
+
+TECH STACK
+----------
+Framework   : Next.js 16.1.6 (App Router) + React 18.3.1 + TypeScript 5
+Database    : Supabase (PostgreSQL-based BaaS)
+AI          : Groq API — model: llama-3.3-70b-versatile
+External    : GitHub API (fetch failed runs, create PRs)
+Utilities   : adm-zip (GitHub Actions log ZIP extraction)
+Deployment  : Vercel (with daily cron job)
+Styling     : Plain CSS (no CSS framework)
+
+
+DIRECTORY STRUCTURE
+-------------------
+src/
+├── app/
+│   ├── layout.tsx                        # Root layout with header
+│   ├── page.tsx                          # Dashboard — lists pipeline failures
+│   ├── globals.css
+│   ├── api/
+│   │   ├── pipelines/route.ts            # GET /api/pipelines
+│   │   ├── pipelines/[id]/route.ts       # GET /api/pipelines/[id]
+│   │   ├── pipelines/analyze/route.ts    # POST /api/pipelines/analyze
+│   │   ├── pipelines/create-pr/route.ts  # POST /api/pipelines/create-pr
+│   │   └── cron/process-repos/route.ts   # GET /api/cron/process-repos (Vercel Cron)
+│   └── pipelines/[id]/
+│       ├── page.tsx                      # SSR pipeline details page
+│       └── PipelineDetailsClient.tsx     # Client component (create PR button)
+├── lib/
+│   ├── supabase.ts     # Supabase client
+│   ├── github.ts       # GitHub API integration
+│   ├── groq.ts         # Groq LLM analysis
+│   ├── pipeline-db.ts  # DB row <-> domain object mapping (snake_case <-> camelCase)
+│   └── zip.ts          # ZIP extraction for logs
+└── types/
+    └── pipeline.ts     # TypeScript interfaces
+
+
+DATABASE (Supabase)
+-------------------
+Table: pipeline_failures
+
+Columns:
+  id                  STRING  PRIMARY  (format: owner:repo:runId)
+  pipeline_name       STRING
+  status              STRING  (e.g. "failure")
+  error_log           STRING  (full GitHub Actions log)
+  failed_stage        STRING | NULL  (e.g. "Build", "Test")
+  error_summary       STRING | NULL  (AI-generated)
+  root_cause          STRING
+  category            STRING | NULL  (code / dependency / configuration / infrastructure / test)
+  fix_suggestion      STRING
+  key_error_lines     STRING[]
+  severity            STRING | NULL  (low / medium / high)
+  confidence          NUMBER  (0-100)
+  explanation         STRING
+  command             STRING
+  repo_owner          STRING | NULL
+  repo_name           STRING | NULL
+  run_id              NUMBER | NULL
+  created_pull_request JSON | NULL  (PR metadata)
+  created_at          STRING  (ISO timestamp)
+
+
+API ENDPOINTS
+-------------
+GET  /api/pipelines                  List all pipeline failures
+GET  /api/pipelines/[id]             Get single failure details
+POST /api/pipelines/analyze          Trigger AI analysis
+                                       Body: { owner, repo, runId }
+POST /api/pipelines/create-pr        Create fix PR
+                                       Body: { pipelineFailureId, repoOwner?, repoName?, branchName? }
+GET  /api/cron/process-repos         Vercel scheduled cron (daily midnight UTC)
+
+
+ENVIRONMENT VARIABLES
+---------------------
+GITHUB_TOKEN              # GitHub PAT (repo + actions scopes required)
+GITHUB_REPOS              # Comma-separated: owner/repo,owner2/repo2
+OPENAI_API_KEY            # Groq API key (variable is misnamed but used for Groq)
+SUPABASE_URL
+SUPABASE_SERVICE_ROLE_KEY
+CRON_SECRET               # Optional — for manual cron endpoint calls
+
+
+KEY FEATURES
+------------
+1. Dashboard (/)
+   - Table of all pipeline failures
+   - Columns: Pipeline, Stage, Status, Severity, Root Cause, Confidence, PR link, Actions
+
+2. Details Page (/pipelines/[id])
+   - Visual pipeline stage diagram (checkmarks / crosses)
+   - AI error summary, root cause, fix suggestion
+   - Severity badge & confidence percentage
+   - Key error lines display + expandable full log
+   - "Generate Fix PR" button (when no PR exists)
+   - PR details card (when PR already created)
+
+3. AI Analysis Flow
+   GitHub ZIP logs -> extract error lines -> Groq LLM -> structured JSON -> Supabase
+
+4. PR Auto-Creation
+   - Confidence >= 70% threshold
+   - Branch: fixmybuild/fix-{runId}
+   - Commits: FIX_SUGGESTION.md
+   - Opens PR with AI-generated title & description
+   - Handles branch/PR conflicts gracefully
+
+5. Vercel Cron
+   - Runs daily at midnight UTC
+   - Processes all repos in GITHUB_REPOS
+   - Auto-creates PRs for failures with confidence >= 70%
+
+
+CORE DATA FLOW
+--------------
+GitHub Actions (Failed Runs)
+        |
+        v
+GitHub API (getFailedRuns, getRunLogs)
+        |
+        v
+Log Extraction (ZIP -> Text -> Error Lines)
+        |
+        v
+Groq LLM (analyzeLogs) [temp: 0.2, max tokens: 1024]
+        |
+        v
+Supabase (upsert pipeline_failures)
+        |
+        v
+Web UI (Dashboard & Details Pages)
+        |
+        v
+Create PR (GitHub API -> createPullRequest)
+        |
+        v
+Update Supabase (store created_pull_request)
+
+
+NOTABLE PATTERNS & CONVENTIONS
+-------------------------------
+- App Router: async server components (SSR) + "use client" for interactivity
+- pipeline-db.ts handles all snake_case (DB) <-> camelCase (TypeScript) conversion
+- Groq prompt: senior DevOps engineer persona, temperature 0.2, expects JSON response
+- Cron protected via x-vercel-cron header or CRON_SECRET bearer token
+- TypeScript strict mode enabled
+- Path alias: @/* -> ./src/*
+- Error handling: try-catch in all API routes with graceful fallbacks
+
+
+DEPLOYMENT CONFIG (vercel.json)
+--------------------------------
+Cron: /api/cron/process-repos runs at "0 0 * * *" (daily midnight UTC)
+
+
+RECENT GIT HISTORY
+------------------
+ed74b69  update nextjs to fix security vulnerability
+7642816  update nextjs to fix security vulnerability
+14ba74a  Updating methods to resolve build error
+9279b7a  resolved build error
+5f054d5  Change for scheduler planning
+
+================================================================================

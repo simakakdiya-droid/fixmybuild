@@ -18,15 +18,25 @@ function isFailed(stage: string, failedStage: string): boolean {
   return s.includes(failed) || failed.includes(s);
 }
 
-function isBeforeFailed(
-  stage: string,
-  stages: string[],
-  failedStage: string
-): boolean {
+function isBeforeFailed(stage: string, stages: string[], failedStage: string): boolean {
   const idx = stages.indexOf(stage);
   const failedIdx = stages.findIndex((s) => isFailed(s, failedStage));
   if (failedIdx === -1) return false;
   return idx >= 0 && idx < failedIdx;
+}
+
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      className={`expand-chevron${open ? " open" : ""}`}
+      width="16" height="16" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" strokeWidth="2.5"
+      strokeLinecap="round" strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
 }
 
 export function PipelineDetailsClient({
@@ -41,11 +51,8 @@ export function PipelineDetailsClient({
   const [expandedChanges, setExpandedChanges] = useState(false);
 
   const severityLevel =
-    (failure.severity ?? "").toLowerCase() === "high"
-      ? "high"
-      : (failure.severity ?? "").toLowerCase() === "low"
-        ? "low"
-        : "medium";
+    (failure.severity ?? "").toLowerCase() === "high" ? "high" :
+    (failure.severity ?? "").toLowerCase() === "low"  ? "low"  : "medium";
 
   async function createPr() {
     if (!failure.id || !failure.repoOwner || !failure.repoName) return;
@@ -62,16 +69,11 @@ export function PipelineDetailsClient({
       });
       const data = await res.json();
       if (!res.ok) {
-        setToast({
-          message: data?.error ?? "Failed to create PR.",
-          error: true,
-        });
+        setToast({ message: data?.error ?? "Failed to create PR.", error: true });
         return;
       }
-      setToast({ message: "Pull request created." });
-      const detailRes = await fetch(
-        `/api/pipelines/${encodeURIComponent(failure.id)}`
-      );
+      setToast({ message: "✓ Pull request created successfully." });
+      const detailRes = await fetch(`/api/pipelines/${encodeURIComponent(failure.id)}`);
       if (detailRes.ok) {
         const updated = await detailRes.json();
         setFailure(updated);
@@ -85,7 +87,7 @@ export function PipelineDetailsClient({
     <>
       {toast && (
         <div
-          className={`toast ${toast.error ? "error" : ""}`}
+          className={`toast${toast.error ? " error" : ""}`}
           role="alert"
           onAnimationEnd={() => setToast(null)}
         >
@@ -93,166 +95,199 @@ export function PipelineDetailsClient({
         </div>
       )}
 
+      {/* ── Main failure card ── */}
       <div className="card">
-        <h2 className="section-label">Pipeline failure detected</h2>
-        <p style={{ color: "#666", marginBottom: "1rem" }}>
-          {failure.repoOwner}/{failure.repoName} · {failure.pipelineName}
-        </p>
+        {/* Header row */}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", marginBottom: "1.25rem", flexWrap: "wrap" }}>
+          <div>
+            <p className="section-label">Pipeline failure detected</p>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--text)", letterSpacing: "-0.02em", marginBottom: "0.25rem" }}>
+              {failure.pipelineName}
+            </h2>
+            {failure.repoOwner && failure.repoName && (
+              <p style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>
+                {failure.repoOwner}/{failure.repoName}
+              </p>
+            )}
+          </div>
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            <span className={`badge severity-${severityLevel}`}>
+              {severityLevel === "high" ? "🔴" : severityLevel === "low" ? "🟢" : "🟡"}{" "}
+              Severity: {(failure.severity ?? "MEDIUM").toUpperCase()}
+            </span>
+            <span className="badge badge-failure">{failure.status}</span>
+          </div>
+        </div>
 
-        <section style={{ marginTop: "1rem" }}>
-          <h3 className="section-label">Failed stage</h3>
+        {/* Pipeline stage visualizer */}
+        <section style={{ marginBottom: "1.5rem" }}>
+          <p className="section-label">Pipeline stages</p>
           <div className="stages">
-            {DEFAULT_STAGES.map((stage) => (
-              <div
-                key={stage}
-                className={`stage ${isFailed(stage, failure.failedStage ?? "") ? "failed" : ""}`}
-                title={
-                  isFailed(stage, failure.failedStage ?? "")
-                    ? failure.rootCause
-                    : undefined
-                }
-              >
-                <span className="stage-icon">
-                  {isFailed(stage, failure.failedStage ?? "")
-                    ? "✕"
-                    : isBeforeFailed(
-                        stage,
-                        DEFAULT_STAGES,
-                        failure.failedStage ?? ""
-                      )
-                      ? "✓"
-                      : "○"}
-                </span>
-                <span>{stage}</span>
-              </div>
-            ))}
+            {DEFAULT_STAGES.map((stage, idx) => {
+              const failed  = isFailed(stage, failure.failedStage ?? "");
+              const passed  = isBeforeFailed(stage, DEFAULT_STAGES, failure.failedStage ?? "");
+              const stageClass = failed ? "failed" : passed ? "passed" : "pending";
+              const icon = failed ? "✕" : passed ? "✓" : "○";
+              return (
+                <div key={stage} style={{ display: "flex", alignItems: "center" }}>
+                  <div
+                    className={`stage ${stageClass}`}
+                    title={failed ? failure.rootCause ?? undefined : undefined}
+                  >
+                    <span className="stage-icon">{icon}</span>
+                    <span>{stage}</span>
+                  </div>
+                  {idx < DEFAULT_STAGES.length - 1 && (
+                    <div className="stage-connector" />
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
 
-        {failure.errorSummary && (
-          <section style={{ marginTop: "1rem" }}>
-            <h3 className="section-label">Error summary</h3>
-            <p className="insight-text">{failure.errorSummary}</p>
-          </section>
-        )}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", flexWrap: "wrap" }}>
+          {/* Left column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            {failure.errorSummary && (
+              <section>
+                <p className="section-label">Error summary</p>
+                <p className="insight-text">{failure.errorSummary}</p>
+              </section>
+            )}
 
-        <section style={{ marginTop: "1rem" }}>
-          <h3 className="section-label">Root cause</h3>
-          <p className="insight-text">{failure.rootCause}</p>
-        </section>
+            <section>
+              <p className="section-label">Root cause</p>
+              <p className="insight-text">{failure.rootCause}</p>
+            </section>
 
-        {failure.fixSuggestion && (
-          <section style={{ marginTop: "1rem" }}>
-            <h3 className="section-label">Suggested fix</h3>
-            <p className="insight-text fix-suggestion">{failure.fixSuggestion}</p>
-          </section>
-        )}
+            {failure.fixSuggestion && (
+              <section>
+                <p className="section-label">Suggested fix</p>
+                <p className="insight-text fix-suggestion">{failure.fixSuggestion}</p>
+              </section>
+            )}
+          </div>
 
-        <section style={{ marginTop: "1rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-          <span
-            className={`badge severity-${severityLevel}`}
-          >
-            Severity: {(failure.severity ?? "medium").toUpperCase()}
-          </span>
-          <span style={{ color: "#555" }}>Confidence: {failure.confidence}%</span>
-        </section>
-        <div
-          style={{
-            height: 8,
-            marginTop: "0.25rem",
-            borderRadius: 4,
-            background: "#eee",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              width: `${failure.confidence}%`,
-              height: "100%",
-              background: "#1976d2",
-            }}
-          />
+          {/* Right column — confidence */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            <section>
+              <p className="section-label">AI Confidence</p>
+              <div className="confidence-detail-wrap">
+                <div className="confidence-detail-header">
+                  <span className="confidence-detail-label">Analysis certainty</span>
+                  <span className="confidence-detail-value">{failure.confidence}%</span>
+                </div>
+                <div className="confidence-detail-bar-bg">
+                  <div className="confidence-detail-bar-fill" style={{ width: `${failure.confidence}%` }} />
+                </div>
+              </div>
+            </section>
+
+            {failure.category && (
+              <section>
+                <p className="section-label">Category</p>
+                <span className="badge badge-neutral" style={{ textTransform: "capitalize", fontSize: "0.8125rem" }}>
+                  {failure.category}
+                </span>
+              </section>
+            )}
+          </div>
         </div>
 
+        {/* Key error lines */}
         {failure.keyErrorLines && failure.keyErrorLines.length > 0 && (
-          <section style={{ marginTop: "1.25rem" }}>
-            <h3 className="section-label">Key error lines</h3>
-            <pre className="key-error-block">
-              {failure.keyErrorLines.join("\n")}
-            </pre>
+          <section style={{ marginTop: "1.5rem" }}>
+            <p className="section-label">Key error lines</p>
+            <pre className="key-error-block">{failure.keyErrorLines.join("\n")}</pre>
           </section>
         )}
       </div>
 
+      {/* ── Full error log ── */}
       <div className="expand-panel">
         <button
           type="button"
           className="expand-header"
-          style={{ width: "100%", textAlign: "left" }}
           onClick={() => setExpandedLog(!expandedLog)}
+          aria-expanded={expandedLog}
         >
-          {expandedLog ? "▼" : "▶"} Full error log
+          <span>Full error log</span>
+          <ChevronIcon open={expandedLog} />
         </button>
         {expandedLog && (
           <div className="expand-body">
-            <pre className="log-content">
-              {failure.errorLog || "No log content."}
-            </pre>
+            <pre className="log-content">{failure.errorLog || "No log content."}</pre>
           </div>
         )}
       </div>
 
+      {/* ── PR card ── */}
       {failure.createdPullRequest && (
-        <div className="card">
-          <h3 className="section-label">Pull Request Created</h3>
-          <a
-            href={(failure.createdPullRequest as CreatedPullRequest).htmlUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary"
-            style={{ marginRight: "0.5rem" }}
-          >
-            View PR #{(failure.createdPullRequest as CreatedPullRequest).prNumber}
-          </a>
-          <p style={{ margin: "1rem 0 0.5rem", color: "#666" }}>
-            Branch: {(failure.createdPullRequest as CreatedPullRequest).branchName}
-          </p>
+        <div className="pr-card">
+          <div className="pr-card-header">
+            <p className="pr-card-title">✓ Pull Request Created</p>
+            <a
+              href={(failure.createdPullRequest as CreatedPullRequest).htmlUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary btn-sm"
+            >
+              View PR #{(failure.createdPullRequest as CreatedPullRequest).prNumber} ↗
+            </a>
+          </div>
+          <div className="pr-branch">
+            🌿 {(failure.createdPullRequest as CreatedPullRequest).branchName}
+          </div>
+
           {(failure.createdPullRequest as CreatedPullRequest).changesSummary && (
-            <>
+            <div className="expand-panel" style={{ marginTop: "0.875rem", marginBottom: 0 }}>
               <button
                 type="button"
                 className="expand-header"
-                style={{ width: "100%", textAlign: "left", marginTop: "0.5rem" }}
                 onClick={() => setExpandedChanges(!expandedChanges)}
+                aria-expanded={expandedChanges}
               >
-                {expandedChanges ? "▼" : "▶"} Changes made
+                <span>Changes made</span>
+                <ChevronIcon open={expandedChanges} />
               </button>
               {expandedChanges && (
                 <div className="expand-body">
-                  <pre style={{ margin: 0, padding: "0.75rem", background: "#f5f5f5", borderRadius: 4, fontSize: 12, whiteSpace: "pre-wrap" }}>
+                  <pre style={{ margin: 0, fontSize: 12, whiteSpace: "pre-wrap", color: "var(--text)" }}>
                     {(failure.createdPullRequest as CreatedPullRequest).changesSummary}
                   </pre>
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       )}
 
-      {!failure.createdPullRequest &&
-        failure.repoOwner &&
-        failure.repoName && (
-          <div style={{ marginTop: "1rem" }}>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={createPr}
-              disabled={creatingPr}
-            >
-              {creatingPr ? "Creating…" : "Generate Fix PR"}
-            </button>
-          </div>
-        )}
+      {/* ── Generate PR button ── */}
+      {!failure.createdPullRequest && failure.repoOwner && failure.repoName && (
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "0.5rem" }}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={createPr}
+            disabled={creatingPr}
+          >
+            {creatingPr ? (
+              <>
+                <span style={{ display: "inline-block", animation: "livePulse 0.8s infinite" }}>⏳</span>
+                Creating PR…
+              </>
+            ) : (
+              "🔀 Generate Fix PR"
+            )}
+          </button>
+          {failure.confidence < 70 && (
+            <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
+              Low confidence ({failure.confidence}%) — review fix before merging
+            </span>
+          )}
+        </div>
+      )}
     </>
   );
 }

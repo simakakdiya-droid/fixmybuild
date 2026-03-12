@@ -26,11 +26,11 @@ export default async function PipelineDetailsPage({
 
   return (
     <>
-      <div style={{ marginBottom: "1rem" }}>
-        <Link href="/" className="btn btn-primary">
-          ← Back to Dashboard
-        </Link>
-      </div>
+      <nav className="breadcrumb" aria-label="Breadcrumb">
+        <Link href="/">Dashboard</Link>
+        <span className="breadcrumb-sep">›</span>
+        <span className="breadcrumb-current">{failure.pipelineName}</span>
+      </nav>
       <PipelineDetailsClient failure={failure} />
     </>
   );
