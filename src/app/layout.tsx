@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { AuthProvider } from "./AuthProvider";
+import { HeaderAuth } from "./HeaderAuth";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
@@ -39,6 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body style={{ fontFamily: "var(--font-inter, Inter, system-ui, sans-serif)", display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+        <AuthProvider>
         <header className="header">
           <div className="header-inner">
             <Link href="/" className="logo">
@@ -61,6 +64,7 @@ export default function RootLayout({
               >
                 <GitHubIcon />
               </a>
+              <HeaderAuth />
             </nav>
           </div>
         </header>
@@ -79,6 +83,7 @@ export default function RootLayout({
 
             <nav className="footer-links" aria-label="Footer navigation">
               <a href="/PRESENTATION.html?v=20260312-llm" target="_blank" rel="noopener noreferrer" className="footer-link">Documentation</a>
+              <a href="/notifications" className="footer-link">Notifications</a>
               <a href="https://www.linkedin.com/in/seema-kakadiya-23757b170" target="_blank" rel="noopener noreferrer" className="footer-link">Support</a>
               <a
                 href="https://github.com/simakakdiya-droid/fixmybuild"
@@ -98,6 +103,7 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+        </AuthProvider>
       </body>
     </html>
   );

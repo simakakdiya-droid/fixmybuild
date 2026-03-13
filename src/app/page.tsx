@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { rowToPipelineFailure } from "@/lib/pipeline-db";
 import type { PipelineFailureRow } from "@/lib/pipeline-db";
 import { DashboardClient } from "./DashboardClient";
+import { AuthGuard } from "./AuthGuard";
 
 async function getPipelines() {
   const { data, error } = await supabase
@@ -23,15 +24,17 @@ export default async function DashboardPage() {
 
   if (error) {
     return (
-      <div className="card">
-        <div className="empty-state">
-          <span className="empty-state-icon">⚠️</span>
-          <p className="empty-state-title">Failed to load pipelines</p>
-          <p className="empty-state-body" style={{ color: "var(--danger)" }}>{error}</p>
+      <AuthGuard>
+        <div className="card">
+          <div className="empty-state">
+            <span className="empty-state-icon">⚠️</span>
+            <p className="empty-state-title">Failed to load pipelines</p>
+            <p className="empty-state-body" style={{ color: "var(--danger)" }}>{error}</p>
+          </div>
         </div>
-      </div>
+      </AuthGuard>
     );
   }
 
-  return <DashboardClient list={list} />;
+  return <AuthGuard><DashboardClient list={list} /></AuthGuard>;
 }

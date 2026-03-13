@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import type { PipelineFailure } from "@/types/pipeline";
 import { AnalyzeModal } from "./AnalyzeModal";
 import { CategoryChart } from "./CategoryChart";
+import { ImpactMetrics } from "./ImpactMetrics";
+import { TrendCharts } from "./TrendCharts";
 
 function SeverityBadge({ severity }: { severity?: string | null }) {
   const s = (severity ?? "").toLowerCase();
@@ -113,6 +115,9 @@ export function DashboardClient({ list }: { list: PipelineFailure[] }) {
         <StatCard icon="🔀" label="PRs Created"     value={stats.withPR}                 color="#d97706" iconBg="#fffbeb" />
       </div>
 
+      {/* ── Impact metrics (before/after) ── */}
+      <ImpactMetrics list={list} />
+
       {/* ── Category chart + empty CTA ── */}
       {list.length > 0 ? (
         <CategoryChart list={list} />
@@ -140,6 +145,9 @@ export function DashboardClient({ list }: { list: PipelineFailure[] }) {
           </div>
         </div>
       )}
+
+      {/* ── Trend charts ── */}
+      <TrendCharts list={list} />
 
       {/* ── Filter bar (only shown when data exists) ── */}
       {list.length > 0 && (
